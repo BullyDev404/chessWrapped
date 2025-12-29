@@ -239,10 +239,10 @@ function App() {
   if (!userResults) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#121212] text-white p-6">
-        <h1 className="text-[#00FF00] text-3xl lg:text-5xl font-extrabold">
+        <h1 className="text-[#00FF00] text-3xl lg:text-5xl font-extrabold text-center">
           Your Chess.com Wrapped♟️
         </h1>
-        <p className="mt-2 text-lg">Discover your chess journey of the year!</p>
+        <p className="mt-2 text-lg text-center">Discover your chess journey of the year!</p>
 
         <input
           type="text"
