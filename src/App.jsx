@@ -1,0 +1,328 @@
+// //
+
+// import { useState } from "react";
+// import { calculateResults } from "./Logic";
+// import Loader from "./ui/Loader";
+// import FirstCard from "./cards/FirstCard";
+// import SecondCard from "./cards/SecondCard";
+// import ThirdCard from "./cards/ThirdCard";
+// import FourthCard from "./cards/FourthCard";
+// import FifthCard from "./cards/FifthCard";
+// import SixthCard from "./cards/SixthCard";
+// import SeventhSlide from "./cards/SeventhSlide";
+
+// // Swiper imports
+// import { Swiper, SwiperSlide } from "swiper/react";
+// // import {Pagination } from "swiper";
+// import { Navigation, Pagination } from "swiper/modules";
+// import "swiper/css";
+// import "swiper/css/navigation";
+// import "swiper/css/pagination";
+
+// function App() {
+//   const [username, setUsername] = useState("");
+//   const [, setUserGames] = useState(null);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [userResults, setUserResults] = useState(null);
+
+//   function capitalizeFirstLetter(str) {
+//     if (!str) return "";
+//     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+//   }
+
+//   async function fetchYearlyGames(username, year = 2025) {
+//     const months = Array.from({ length: 12 }, (_, i) => i + 1);
+//     const fetches = months.map((month) => {
+//       const url = `https://api.chess.com/pub/player/${username}/games/${year}/${month
+//         .toString()
+//         .padStart(2, "0")}`;
+//       return fetch(url)
+//         .then((res) => res.json())
+//         .catch(() => ({ games: [] }));
+//     });
+
+//     const resultsPerMonth = await Promise.all(fetches);
+//     return resultsPerMonth.flatMap((data) => data.games || []);
+//   }
+
+//   async function handleClick() {
+//     setIsLoading(true);
+//     try {
+//       const allGames = await fetchYearlyGames(username, 2025);
+
+//       if (allGames.length === 0) {
+//         console.log(`No games found for user ${username}`);
+//         setIsLoading(false);
+//         return;
+//       }
+
+//       setUserGames(allGames);
+
+//       const results = calculateResults(allGames, username);
+//       setUserResults(results);
+//       setUsername(capitalizeFirstLetter(username));
+//     } catch (error) {
+//       console.error("Something went wrong:", error);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   }
+
+//   return (
+//     <>
+//       {isLoading ? (
+//         <Loader username={username} />
+//       ) : userResults ? (
+//         <div className="min-h-screen bg-[#121212] text-white p-6 flex flex-col items-center gap-3 lg:gap-5">
+//           <h1 className="text-center text-[#00FF00] text-2xl lg:text-5xl tracking-tight font-extrabold drop-shadow-md">
+//             {username}'s Chess.com Wrapped♟️
+//           </h1>
+//           <p className="text-center tracking-wide text-white text-md lg:text-xl font-medium">
+//             Discover your chess journey of the year!
+//           </p>
+
+//           {/* Swiper Carousel */}
+//           <Swiper
+//             modules={[Navigation, Pagination]}
+//             navigation
+//             pagination={{ clickable: true }}
+//             spaceBetween={30}
+//             slidesPerView={1}
+//             className="w-full max-w-4xl mt-6"
+//           >
+//             <SwiperSlide>
+//               <FirstCard userResults={userResults} />
+//             </SwiperSlide>
+//             <SwiperSlide>
+//               <SecondCard userResults={userResults} />
+//             </SwiperSlide>
+//             <SwiperSlide>
+//               <ThirdCard favoriteOpenings={userResults.favoriteOpenings} />
+//             </SwiperSlide>
+//             <SwiperSlide>
+//               <FourthCard
+//                 mostPlayed={userResults.mostPlayedOpponent}
+//                 opponent={userResults.opponentCount}
+//               />
+//             </SwiperSlide>
+//             <SwiperSlide>
+//               <FifthCard
+//                 totalMoves={userResults.totalMoves}
+//                 totalTimePlayed={userResults.totalTimePlayed}
+//               />
+//             </SwiperSlide>
+//             <SwiperSlide>
+//               <SixthCard
+//                 bestWin={userResults.bestWin}
+//                 worstLoss={userResults.worstLoss}
+//               />
+//             </SwiperSlide>
+//             <SwiperSlide>
+//               <SeventhSlide stats={userResults} />
+//             </SwiperSlide>
+//           </Swiper>
+//         </div>
+//       ) : (
+//         <div className="flex flex-col items-center justify-center min-h-screen bg-[#121212] text-white p-6">
+//           <h1 className="text-center text-[#00FF00] text-3xl lg:text-5xl tracking-tight font-extrabold drop-shadow-md">
+//             Your Chess.com Wrapped♟️
+//           </h1>
+//           <p className="text-center text-white text-lg lg:text-xl font-medium mt-2">
+//             Discover your chess journey of the year!
+//           </p>
+
+//           <input
+//             type="text"
+//             className="bg-[#1E1E1E] text-white p-3 rounded-full mt-6 text-center w-64 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00FF00] transition"
+//             placeholder="Enter your username here"
+//             value={username}
+//             onChange={(e) => setUsername(e.target.value)}
+//           />
+
+//           {username && (
+//             <button
+//               className="bg-[#00FF00] hover:bg-[#00CC00] text-black px-6 py-3 rounded-full mt-5 font-semibold shadow-lg transition-all transform hover:scale-105"
+//               onClick={handleClick}
+//             >
+//               Get My Wrapped
+//             </button>
+//           )}
+//         </div>
+//       )}
+//     </>
+//   );
+// }
+
+// export default App;
+
+import { useState, useRef } from "react";
+import { calculateResults } from "./Logic";
+import Loader from "./ui/Loader";
+
+import FirstCard from "./cards/FirstCard";
+import SecondCard from "./cards/SecondCard";
+import ThirdCard from "./cards/ThirdCard";
+import FourthCard from "./cards/FourthCard";
+import FifthCard from "./cards/FifthCard";
+import SixthCard from "./cards/SixthCard";
+import SeventhSlide from "./cards/SeventhSlide";
+
+// Swiper
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
+
+function App() {
+  const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [userResults, setUserResults] = useState(null);
+
+  const swiperRef = useRef(null);
+
+  function capitalizeFirstLetter(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  async function fetchYearlyGames(username, year = 2025) {
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+    const fetches = months.map(async (month) => {
+      const url = `https://api.chess.com/pub/player/${username}/games/${year}/${String(
+        month
+      ).padStart(2, "0")}`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return [];
+
+        const data = await res.json();
+        return data.games ?? [];
+      } catch {
+        return [];
+      }
+    });
+
+    const results = await Promise.all(fetches);
+    return results.flat();
+  }
+
+  async function handleClick() {
+    if (!username) return;
+
+    setIsLoading(true);
+
+    try {
+      const normalizedUsername = username.trim().toLowerCase();
+
+      const allGames = await fetchYearlyGames(normalizedUsername, 2025);
+
+      if (!allGames.length) {
+        console.warn("No games found");
+        return;
+      }
+
+      const results = calculateResults(allGames, normalizedUsername);
+      setUserResults(results);
+      setUsername(capitalizeFirstLetter(normalizedUsername));
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoading) {
+    return <Loader username={username} />;
+  }
+
+  if (!userResults) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#121212] text-white p-6">
+        <h1 className="text-[#00FF00] text-3xl lg:text-5xl font-extrabold">
+          Your Chess.com Wrapped♟️
+        </h1>
+        <p className="mt-2 text-lg">Discover your chess journey of the year!</p>
+
+        <input
+          type="text"
+          className="bg-[#1E1E1E] text-white p-3 rounded-full mt-6 text-center w-64 focus:outline-none focus:ring-2 focus:ring-[#00FF00]"
+          placeholder="Enter your username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        {username && (
+          <button
+            type="button" // mobile wahala
+            onClick={handleClick}
+            className="bg-[#00FF00] hover:bg-[#00CC00] text-black px-6 py-3 rounded-full mt-5 font-semibold transition"
+          >
+            Get My Wrapped
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#121212] text-white p-6 flex flex-col items-center">
+      <h1 className="text-[#00FF00] text-2xl lg:text-5xl font-extrabold">
+        {username}'s Chess.com Wrapped♟️
+      </h1>
+      <p className="mt-2 text-lg">Discover your chess journey of the year!</p>
+
+      <Swiper
+        modules={[Autoplay]}
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        autoplay={{ delay: 4500, disableOnInteraction: false }}
+        slidesPerView={1}
+        spaceBetween={30}
+        className="relative w-full max-w-4xl mt-6"
+      >
+        <div
+          className="absolute left-0 top-0 w-1/2 h-full z-10"
+          onClick={() => swiperRef.current?.slidePrev()}
+        />
+
+        <div
+          className="absolute right-0 top-0 w-1/2 h-full z-10"
+          onClick={() => swiperRef.current?.slideNext()}
+        />
+
+        <SwiperSlide>
+          <FirstCard userResults={userResults} />
+        </SwiperSlide>
+        <SwiperSlide>
+          <SecondCard userResults={userResults} />
+        </SwiperSlide>
+        <SwiperSlide>
+          <ThirdCard favoriteOpenings={userResults.favoriteOpenings} />
+        </SwiperSlide>
+        <SwiperSlide>
+          <FourthCard
+            mostPlayed={userResults.mostPlayedOpponent}
+            opponent={userResults.opponentCount}
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <FifthCard
+            totalMoves={userResults.totalMoves}
+            totalTimePlayed={userResults.totalTimePlayed}
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <SixthCard
+            bestWin={userResults.bestWin}
+            worstLoss={userResults.worstLoss}
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <SeventhSlide stats={userResults} />
+        </SwiperSlide>
+      </Swiper>
+    </div>
+  );
+}
+
+export default App;
