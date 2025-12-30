@@ -110,7 +110,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white p-6 flex flex-col items-center">
-      <h1 className="text-[#00FF00] text-2xl lg:text-5xl font-extrabold text-center">
+      <h1 className="text-[#00FF00] text-2xl lg:text-5xl font-extrabold sm:text-center text-center">
         {username}'s Chess.com Wrapped♟️
       </h1>
       <p className="mt-2 text-lg text-center">Discover your chess journey of the year!</p>
