@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { calculateResults } from "./Logic";
 import Loader from "./ui/Loader";
 
@@ -21,6 +21,25 @@ function App() {
   const [userResults, setUserResults] = useState(null);
 
   const swiperRef = useRef(null);
+
+  
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio("/public/sound.mp3");
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.2;
+
+    audioRef.current.play().catch(() => {
+     
+    });
+
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
+  }, []);
+
 
   function capitalizeFirstLetter(str) {
     if (!str) return "";
@@ -57,7 +76,6 @@ function App() {
 
     try {
       const normalizedUsername = username.trim().toLowerCase();
-
       const allGames = await fetchYearlyGames(normalizedUsername, 2025);
 
       if (!allGames.length) {
@@ -85,7 +103,9 @@ function App() {
         <h1 className="text-[#00FF00] text-3xl lg:text-5xl font-extrabold text-center">
           Your Chess.com Wrapped♟️
         </h1>
-        <p className="mt-2 text-lg text-center">Discover your chess journey of the year!</p>
+        <p className="mt-2 text-lg text-center">
+          Discover your chess journey of the year!
+        </p>
 
         <input
           type="text"
@@ -97,7 +117,7 @@ function App() {
 
         {username && (
           <button
-            type="button" // mobile wahala
+            type="button"
             onClick={handleClick}
             className="bg-[#00FF00] hover:bg-[#00CC00] text-black px-6 py-3 rounded-full mt-5 font-semibold transition"
           >
@@ -110,10 +130,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white p-6 flex flex-col items-center">
-      <h1 className="text-[#00FF00] text-2xl lg:text-5xl font-extrabold sm:text-center text-center">
+      <h1 className="text-[#00FF00] text-2xl lg:text-5xl font-extrabold text-center">
         {username}'s Chess.com Wrapped♟️
       </h1>
-      <p className="mt-2 text-lg text-center">Discover your chess journey of the year!</p>
+      <p className="mt-2 text-lg text-center">
+        Discover your chess journey of the year!
+      </p>
 
       <Swiper
         modules={[Autoplay]}
@@ -127,7 +149,6 @@ function App() {
           className="absolute left-0 top-0 w-1/2 h-full z-10"
           onClick={() => swiperRef.current?.slidePrev()}
         />
-
         <div
           className="absolute right-0 top-0 w-1/2 h-full z-10"
           onClick={() => swiperRef.current?.slideNext()}
